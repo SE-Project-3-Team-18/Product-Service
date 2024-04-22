@@ -1,0 +1,121 @@
+swagger: '2.0'
+info:
+  title: Product Service API
+  version: '1.0.0'
+  description: API for handling Product Catalog Information
+host: localhost:3007
+basePath: /api/product
+schemes:
+  - http
+paths:
+  /all:
+    get:
+      summary: Retrieve all products
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        '500':
+          description: Internal server error
+  /{id}:
+    get:
+      summary: Retrieve a product by ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the product to retrieve
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+  /add:
+    post:
+      summary: Add a new product
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: product
+          description: Product object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /update/{id}:
+    put:
+      summary: Update an existing product
+      parameters:
+        - name: id
+          in: path
+          description: ID of the product to update
+          required: true
+          type: string
+        - in: body
+          name: product
+          description: Product object that needs to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+  /remove/{id}:
+    delete:
+      summary: Remove a product
+      parameters:
+        - name: id
+          in: path
+          description: ID of the product to remove
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Product'
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+definitions:
+  Product:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: number
+      category:
+        type: string
+      sellerId:
+        type: string
