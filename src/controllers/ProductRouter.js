@@ -58,6 +58,23 @@ ProductRouter.put("/update/:id", async (request, response, next) => {
     if (!old_product) {
       throw new CustomError(404, "Product not found");
     }
+    // validation
+    const quantity = product.quantity;
+    if(quantity < 0){
+      throw new CustomError(400, "Quantity can't be negative");
+    }
+    const price = product.price;
+    if(price<0){
+      throw new CustomError(400, "Price can't be negative");
+    }
+    const name = product.name;
+    const description = product.description;
+    const category = product.category;
+    const sellerId = product.sellerId;
+    if(!name || !description || !category || !sellerId){
+      throw new CustomError(400, "Name, Description , Category and Seller are required");
+    }
+    // end of validation
     old_product.name = product.name;
     old_product.price = product.price;
     old_product.description = product.description;
@@ -118,5 +135,20 @@ ProductRouter.put("/buy/:id", async (request, response, next) => {
     }
 })
 
+ProductRouter.put("/refund/:id", async (request, response, next) => {
+    try {
+        const ID = request.params.id;
+        const quantity = request.body.quantity;
+        const product = await Product.findById(ID);
+        if (!product) {
+            throw new CustomError(404, 'Product not found');
+        }
+        product.quantity += quantity;
+        const updatedProduct = await product.save();
+        response.status(200).json(updatedProduct);
+    } catch (error) {
+        next(error);
+    }
+})
 
 module.exports = ProductRouter;
