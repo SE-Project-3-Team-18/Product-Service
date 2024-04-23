@@ -38,7 +38,7 @@ ProductRouter.post("/add", async (request, response, next) => {
     const name = product.name;
     const description = product.description;
     const category = product.category;
-    const sellerId = product.sellerId;
+    const sellerId = request.get('X-Seller-Id');
     if(!name || !description || !category || !sellerId){
       throw new CustomError(400, "Name, Description , Category and Seller are required");
     }
